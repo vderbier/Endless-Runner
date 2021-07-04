@@ -16,7 +16,7 @@ class Play extends Phaser.Scene {
     create() {
 
         this.JUMP_VELOCITY = -700;
-        this.physics.world.gravity.y = 2600;
+        this.physics.world.gravity.y = 2200;
         this.gameOver = false;
         this.isJumping = false;
         this.MAX_JUMPS = 1;
@@ -76,29 +76,31 @@ class Play extends Phaser.Scene {
             
                 this.frames = 0; // reset frames counter.
                 this.nextRockFrame = Phaser.Math.RND.integerInRange(100, 200); // next obs between 100 and 200 frames from prev one. NEEDS TO GET SMALLER OVER TIME.
-                console.log(this.nextRockFrame);  
+                //console.log(this.nextRockFrame);  
             }
 
+            /* This jumping section is from Nathan Altice's MovementStudies Variable Jump scene. */
             this.runner.isGrounded = this.runner.body.touching.down;
-            if (this.runner.isGrounded) {    // if we are on the ground we should get our jump back
-                this.jumps = this.MAX_JUMPS;
+            if (this.runner.isGrounded) {    // if we are on the ground we should get our jump back 
                 this.isJummping = false;
-            } // else {
+                this.jumps = this.MAX_JUMPS;
+            }  //else {
               // play jump animation.
             //}
 
-            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(this.upKey, 150)) { // Variable jumps idea from Nathan's MovementStudies VariableJumps scene.
+            // jump when up key is down.
+            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(this.upKey, 150)) {
                 this.runner.body.velocity.y = this.JUMP_VELOCITY;
-                console.log(this.jumps);
                 this.isJummping = true;
             }
 
-            // Not working atm
-            if(this.isJumping && !this.upKey.isDown) {
-                this.jumps--;
+            // upon release of up key, start falling back down.
+            if(this.isJummping && Phaser.Input.Keyboard.UpDuration(this.upKey)) {
+                this.jumps -= 1;
                 console.log(this.jumps);
                 this.isJumping = false;
             }
+            /***********************************************************************************/
         }
     }
 }
