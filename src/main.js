@@ -1,6 +1,8 @@
 // A lot of the code is similar to Nathan Altice's MovementStudies Runner.js scene.
 
 const tileSize = 35;  // varible used to calculate where tiles should be set.
+const groundWidth = 600;
+const obsSpeedInPPS = 200;
 
 let config = {
     type: Phaser.AUTO,
@@ -20,3 +22,9 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
+
+
+
+game.settings = {
+    speed: 4     // initial speed
+}
