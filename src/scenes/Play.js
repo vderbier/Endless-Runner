@@ -10,6 +10,8 @@ class Play extends Phaser.Scene {
         this.load.image('ground', './assets/ground.png');
         this.load.image('groundCover', './assets/GroundCover.png');
         this.load.image('rock', './assets/rock1.png');
+        this.load.image('bigRock', './assets/rock2.png');
+        this.load.image('tree', './assets/tree.png');
         this.load.image('runner', './assets/Runner.png');
 
         this.load.spritesheet('running', './assets/AnimatedRunner8Frames-01.png', 
@@ -19,7 +21,7 @@ class Play extends Phaser.Scene {
     create() {
 
         this.JUMP_VELOCITY = -650;
-        this.physics.world.gravity.y = 2100;
+        this.physics.world.gravity.y = 2400;
         this.gameOver = false;
         this.isJumping = false;
         this.MAX_JUMPS = 1;
@@ -61,8 +63,10 @@ class Play extends Phaser.Scene {
 
         this.physics.add.collider(this.runner, this.ground);
 
-        this.frames = 0;
-        this.nextRockFrame = 1; // when the next rock should arrive, first is immediatly.
+        this.frames = 0;              // when to throw out a new obstacle
+        this.seconds = 0;             // when to increase speed
+        this.incrementSpeed = false;  // to synchronize the increase of speed of obstacles and ground.
+        this.nextRockFrame = 1;       // when the next rock should arrive, first is immediatly.
 
 
     }
@@ -70,6 +74,11 @@ class Play extends Phaser.Scene {
     update() {  // ~60 Frames per seconds
 
         if (!this.gameOver) { 
+
+            this.seconds += 1;             
+            if (this.seconds/60 % 10 == 0) {  // set to true every 10 seconds.
+                this.incrementSpeed = true; 
+            }
 
             this.frames += 1;
 
@@ -79,16 +88,41 @@ class Play extends Phaser.Scene {
 
             // Use frame rate to callculate when next obs should appear. 
             if (this.frames >= this.nextRockFrame) { // create next obstacle
-                
-                let obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - tileSize*4, 'rock').setScale(0.8);
-                obs.body.setVelocityX(-obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME.
-                this.physics.add.collider(obs, this.ground);
 
-               // this.physics.add.collider(obs, this.runner);
-                console.log(this.physics.add.collider(obs, this.runner));
+                if (this.incrementSpeed == true) {    // increase speed of everything once a new obstacle spawns
+                    game.settings.speed += 1;         // so it looks in sync.
+                    game.settings.obsSpeedInPPS += 60;
+                    console.log(game.settings.speed);
+                    this.incrementSpeed = false;
+                }
+
+                // randomize which obstacle will spawn
+                let randNum = Phaser.Math.RND.integerInRange(1, 3);
+
+                if (randNum == 1) {         // one of these three obstacles will spawn.
+                    var obsType = 'rock';
+                } else if (randNum == 2) {
+                    var obsType = 'bigRock';
+                } else if (randNum == 3) {
+                    var obsType = 'tree';
+                }
+                
+                let obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - tileSize*4, obsType);
+
+                obs.body.setVelocityX(-game.settings.obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME.
+                //obs.body.setCircle(36);
+                //obs.body.bounce.set(1);
+                this.physics.add.collider(obs, this.ground);
+                
+                this.physics.add.collider(obs, this.runner, () => {
+                    this.gameOver = true;
+                    obs.body.enable = false;
+                    this.runner.body.enable = false;
+                });
+                //console.log(this.physics.add.collider(obs, this.runner));
             
                 this.frames = 0; // reset frames counter.
-                this.nextRockFrame = Phaser.Math.RND.integerInRange(100, 200); // next obs between 100 and 200 frames from prev one. NEEDS TO GET SMALLER OVER TIME.
+                this.nextRockFrame = Phaser.Math.RND.integerInRange(600/game.settings.speed, 1200/game.settings.speed); // next obs between 100 and 200 frames from prev one. NEEDS TO GET SMALLER OVER TIME.
                 //console.log(this.nextRockFrame);  
             }
 
@@ -105,7 +139,7 @@ class Play extends Phaser.Scene {
             }
 
             // jump when up key is down.
-            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(this.upKey, 150)) {
+            if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(this.upKey, 170)) {
                 this.runner.body.velocity.y = this.JUMP_VELOCITY;
                 this.isJummping = true;
             }
@@ -113,7 +147,7 @@ class Play extends Phaser.Scene {
             // upon release of up key, start falling back down.
             if(this.isJummping && Phaser.Input.Keyboard.UpDuration(this.upKey)) {
                 this.jumps -= 1;
-                console.log(this.jumps);
+              //  console.log(this.jumps);
                 this.isJumping = false;
             }
             /***********************************************************************************/

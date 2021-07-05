@@ -3,7 +3,6 @@
 const tileSize = 35;  // varible used to calculate where tiles should be set.
 const groundHeight = 60;
 const groundWidth = 600;
-const obsSpeedInPPS = 300;
 
 let config = {
     type: Phaser.AUTO,
@@ -12,7 +11,7 @@ let config = {
     physics: {     // physics settings from Nathan Altice's MovementStudies example.
         default: 'arcade',
         arcade: {
-            debug: true,
+            debug: false,
             gravity: {
                 x: 0,
                 y: 0
@@ -27,5 +26,6 @@ let game = new Phaser.Game(config);
 
 
 game.settings = {
-    speed: 5     // initial speed
+    speed: 6,     // initial speed
+    obsSpeedInPPS: 360  // obstacle speed is 60 * speed at all points of the game.
 }
