@@ -11,12 +11,15 @@ class Play extends Phaser.Scene {
         this.load.image('groundCover', './assets/GroundCover.png');
         this.load.image('rock', './assets/rock1.png');
         this.load.image('runner', './assets/Runner.png');
+
+        this.load.spritesheet('running', './assets/AnimatedRunner8Frames.png', 
+            {frameWidth: 78, frameHeight: 127, startFrame: 0, endFrame: 7});
       }
     
     create() {
 
-        this.JUMP_VELOCITY = -700;
-        this.physics.world.gravity.y = 2200;
+        this.JUMP_VELOCITY = -650;
+        this.physics.world.gravity.y = 2100;
         this.gameOver = false;
         this.isJumping = false;
         this.MAX_JUMPS = 1;
@@ -28,29 +31,40 @@ class Play extends Phaser.Scene {
         // So here we have to add this group to have collision for the ground. 
         this.ground = this.add.group();
 
-        // we add the ground sprite  to the group and have settings so its collision box doesn't move.
+        // we add the ground sprite to the group and have settings so its collision box doesn't move.
         // tileSize defined in Main
         for (let i = 0; i < game.config.width; i += groundWidth) {  // we need this loop to make the collision reach the end of the stage.
             let groundTile = this.physics.add.sprite(i, game.config.height - groundHeight, 'ground').setOrigin(0);
             groundTile.body.immovable = true;
             groundTile.body.allowGravity = false;
+            groundTile.body.colldeWorldBounds = true;
+            groundTile.body.bounce.set(0);
             this.ground.add(groundTile);
         }
 
-        this.groundCover = this.add.tileSprite(0, game.config.height - groundHeight -10, game.config.width, groundHeight + 10, 'groundCover').setOrigin(0, 0);
-
-        // Make the ground group we just made into a tileSprite that scrolls. no need because it has no texture.
-       // this.scrollingGround = this.add.tileSprite(0, game.config.height - tileSize, game.config.width, tileSize, 'ground').setOrigin(0, 0); 
+        this.groundCover = this.add.tileSprite(0, game.config.height - groundHeight -10, game.config.width, groundHeight + 10, 'groundCover').setOrigin(0, 0); // 10 is arbitrary
 
         // define jump key
         this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
         // set up runner
-        this.runner = this.physics.add.sprite(120, game.config.height/2-tileSize, 'runner').setScale(0.8); // 0.8 is the scale
+        this.runner = this.physics.add.sprite(120, game.config.height/2-tileSize, 'runner'); // 0.8 is the scale
+        // running animation config
+        this.animFramesConfig = {
+            key: 'running',
+            frames: this.anims.generateFrameNumbers('running', { start: 0, end: 7, first: 0}),
+            frameRate: game.settings.speed*2 // anim will get faster as game gets faster.
+        };
+        this.anims.create(this.animFramesConfig);
+
+        this.runner.anims.play('running', true);
+
         this.physics.add.collider(this.runner, this.ground);
 
         this.frames = 0;
         this.nextRockFrame = 1; // when the next rock should arrive, first is immediatly.
+
+
     }
 
     update() {  // ~60 Frames per seconds
@@ -60,7 +74,6 @@ class Play extends Phaser.Scene {
             this.frames += 1;
 
             // scrolling environment 
-        // this.scrollingGround.tilePositionX += game.settings.speed;
             this.mountains.tilePositionX += 1;
             this.groundCover.tilePositionX += game.settings.speed;
 
@@ -68,10 +81,10 @@ class Play extends Phaser.Scene {
             if (this.frames >= this.nextRockFrame) { // create next obstacle
                 
                 let obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - tileSize*4, 'rock').setScale(0.8);
-                obs.body.setVelocityX(-obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME. 
+                obs.body.setVelocityX(-obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME.
                 this.physics.add.collider(obs, this.ground);
 
-                this.physics.add.collider(obs, this.runner);
+               // this.physics.add.collider(obs, this.runner);
                 console.log(this.physics.add.collider(obs, this.runner));
             
                 this.frames = 0; // reset frames counter.
@@ -82,11 +95,14 @@ class Play extends Phaser.Scene {
             /* This jumping section is from Nathan Altice's MovementStudies Variable Jump scene. */
             this.runner.isGrounded = this.runner.body.touching.down;
             if (this.runner.isGrounded) {    // if we are on the ground we should get our jump back 
-                this.isJummping = false;
+                this.runner.anims.play('running', true);
+                this.isJummping = false;    
                 this.jumps = this.MAX_JUMPS;
-            }  //else {
-              // play jump animation.
-            //}
+
+             } else {
+              // play jump frame, first frame of running animation.
+              this.runner.anims.pause(this.runner.anims.currentAnim.frames[0]);
+            }
 
             // jump when up key is down.
             if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(this.upKey, 150)) {
