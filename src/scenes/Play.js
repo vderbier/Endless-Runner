@@ -12,7 +12,7 @@ class Play extends Phaser.Scene {
         this.load.image('rock', './assets/rock1.png');
         this.load.image('runner', './assets/Runner.png');
 
-        this.load.spritesheet('running', './assets/AnimatedRunner8Frames-Test-01.png', 
+        this.load.spritesheet('running', './assets/AnimatedRunner8Frames-01.png', 
             {frameWidth: 80, frameHeight: 127, startFrame: 0, endFrame: 7});
       }
     
