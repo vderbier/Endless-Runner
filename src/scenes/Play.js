@@ -63,8 +63,7 @@ class Play extends Phaser.Scene {
 
         this.frames = 0;
         this.nextRockFrame = 1; // when the next rock should arrive, first is immediatly.
-
-
+        setInterval(() => {game.settings.speed = game.settings.speed*(4)}, 15000)
     }
 
     update() {  // ~60 Frames per seconds
@@ -80,17 +79,19 @@ class Play extends Phaser.Scene {
             // Use frame rate to callculate when next obs should appear. 
             if (this.frames >= this.nextRockFrame) { // create next obstacle
                 
-                let obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - tileSize*4, 'rock').setScale(0.8);
-                obs.body.setVelocityX(-obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME.
-                this.physics.add.collider(obs, this.ground);
+                this.obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - tileSize*4, 'rock').setScale(0.8);
+                this.obs.body.setVelocityX(-obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME.
+                this.physics.add.collider(this.obs, this.ground);
 
                // this.physics.add.collider(obs, this.runner);
-                console.log(this.physics.add.collider(obs, this.runner));
+                console.log(this.physics.add.collider(this.obs, this.runner));
             
                 this.frames = 0; // reset frames counter.
                 this.nextRockFrame = Phaser.Math.RND.integerInRange(100, 200); // next obs between 100 and 200 frames from prev one. NEEDS TO GET SMALLER OVER TIME.
                 //console.log(this.nextRockFrame);  
             }
+            console.log(this.physics.world.collide(this.runner, this.obs, this.Viking_down, null, this));
+            this.physics.world.collide(this.runner, this.obs, this.Viking_down, null, this);
 
             /* This jumping section is from Nathan Altice's MovementStudies Variable Jump scene. */
             this.runner.isGrounded = this.runner.body.touching.down;
@@ -118,5 +119,9 @@ class Play extends Phaser.Scene {
             }
             /***********************************************************************************/
         }
+        
     }
+    Viking_down() {
+            this.scene.start("GameOver");
+        }
 }
