@@ -8,8 +8,8 @@ class GameOver extends Phaser.Scene {
             fontFamily: 'Courier',
             fontSize: '28px',
             backgroundColor: '#Fb3141',
-            color: '#843605',
-            align: 'right',
+            color: 'white', //'#843605',
+            align: 'center',
             padding: {
                 top: 5,
                 bottom: 5
@@ -17,5 +17,6 @@ class GameOver extends Phaser.Scene {
             fixedWidth: 170
         }
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', this.scoreConfig).setOrigin(0.5);
+        this.GameOver = true;
     }
 }

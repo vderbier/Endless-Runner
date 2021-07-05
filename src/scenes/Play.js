@@ -63,7 +63,7 @@ class Play extends Phaser.Scene {
 
         this.frames = 0;
         this.nextRockFrame = 1; // when the next rock should arrive, first is immediatly.
-        setInterval(this.speedIncrease, 10000)
+        this.inc = setInterval(this.speedIncrease, 1000)
     }
 
     update() {  // ~60 Frames per seconds
@@ -129,8 +129,10 @@ class Play extends Phaser.Scene {
     }
     Viking_down() {
             this.scene.start("GameOver");
+            clearInterval(this.inc);
         }
     speedIncrease() {
+        console.log("speed+");
         game.settings.speed = game.settings.speed*(1.2);
         game.settings.obsSpeedInPPS += 60;
     }
