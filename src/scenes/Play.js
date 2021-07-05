@@ -63,7 +63,7 @@ class Play extends Phaser.Scene {
 
         this.frames = 0;
         this.nextRockFrame = 1; // when the next rock should arrive, first is immediatly.
-        setInterval(() => {game.settings.speed = game.settings.speed*(4)}, 15000)
+        setInterval(this.speedIncrease, 10000)
     }
 
     update() {  // ~60 Frames per seconds
@@ -84,14 +84,20 @@ class Play extends Phaser.Scene {
                 this.physics.add.collider(this.obs, this.ground);
 
                // this.physics.add.collider(obs, this.runner);
-                console.log(this.physics.add.collider(this.obs, this.runner));
+               // console.log(this.physics.add.collider(this.obs, this.runner));
             
                 this.frames = 0; // reset frames counter.
                 this.nextRockFrame = Phaser.Math.RND.integerInRange(100, 200); // next obs between 100 and 200 frames from prev one. NEEDS TO GET SMALLER OVER TIME.
                 //console.log(this.nextRockFrame);  
             }
-            console.log(this.physics.world.collide(this.runner, this.obs, this.Viking_down, null, this));
-            this.physics.world.collide(this.runner, this.obs, this.Viking_down, null, this);
+            this.physics.add.collider(this.runner, this.obs, this.Viking_down, null, this);
+            // this.physics.world.collide(this.runner, this.obs, this.Viking_down, null, this);
+            
+            // this.physics.add.collider(obs, this.runner, () => {
+            //     this.gameOver = true;
+            //     obs.body.enable = false;
+            //     this.runner.body.enable = false;
+            // });
 
             /* This jumping section is from Nathan Altice's MovementStudies Variable Jump scene. */
             this.runner.isGrounded = this.runner.body.touching.down;
@@ -124,4 +130,8 @@ class Play extends Phaser.Scene {
     Viking_down() {
             this.scene.start("GameOver");
         }
+    speedIncrease() {
+        game.settings.speed = game.settings.speed*(1.2);
+        game.settings.obsSpeedInPPS += 60;
+    }
 }
