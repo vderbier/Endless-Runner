@@ -63,6 +63,7 @@ class Play extends Phaser.Scene {
 
         this.frames = 0;
         this.nextRockFrame = 1; // when the next rock should arrive, first is immediatly.
+        // increases speed every 1000 seconds
         this.inc = setInterval(this.speedIncrease, 1000)
     }
 
@@ -82,22 +83,12 @@ class Play extends Phaser.Scene {
                 this.obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - tileSize*4, 'rock').setScale(0.8);
                 this.obs.body.setVelocityX(-obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME.
                 this.physics.add.collider(this.obs, this.ground);
-
-               // this.physics.add.collider(obs, this.runner);
-               // console.log(this.physics.add.collider(this.obs, this.runner));
             
                 this.frames = 0; // reset frames counter.
                 this.nextRockFrame = Phaser.Math.RND.integerInRange(100, 200); // next obs between 100 and 200 frames from prev one. NEEDS TO GET SMALLER OVER TIME.
                 //console.log(this.nextRockFrame);  
             }
             this.physics.add.collider(this.runner, this.obs, this.Viking_down, null, this);
-            // this.physics.world.collide(this.runner, this.obs, this.Viking_down, null, this);
-            
-            // this.physics.add.collider(obs, this.runner, () => {
-            //     this.gameOver = true;
-            //     obs.body.enable = false;
-            //     this.runner.body.enable = false;
-            // });
 
             /* This jumping section is from Nathan Altice's MovementStudies Variable Jump scene. */
             this.runner.isGrounded = this.runner.body.touching.down;
@@ -129,10 +120,13 @@ class Play extends Phaser.Scene {
     }
 
     Viking_down() {
+        // starts next scene after 40 milliseconds
         setTimeout(() => {this.scene.start("GameOver")}, 40)
         clearInterval(this.inc);
     }
     speedIncrease() {
+        // increases game speed by 1.2 times and increases obstacle velocity
+        // by 10 frames
         console.log("speed+");
         game.settings.speed = game.settings.speed*(1.2);
         obsSpeedInPPS += 10;
