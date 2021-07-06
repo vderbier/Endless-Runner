@@ -20,11 +20,7 @@ class Play extends Phaser.Scene {
     
     create() {
 
-        this.JUMP_VELOCITY = -650;
-        this.physics.world.gravity.y = 2400;
-        this.gameOver = false;
-        this.isJumping = false;
-        this.MAX_JUMPS = 1;
+        this.init();
 
         // Add tile Sprites
         this.mountains = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'mountains').setOrigin(0, 0);
@@ -63,19 +59,13 @@ class Play extends Phaser.Scene {
 
         this.physics.add.collider(this.runner, this.ground);
 
-
-        this.frames = 0;              // when to throw out a new obstacle
-        this.seconds = 0;             // when to increase speed
-        this.incrementSpeed = false;  // to synchronize the increase of speed of obstacles and ground.
-        this.nextRockFrame = 1;       // when the next rock should arrive, first is immediatly.
-
     }
 
     update() {  // ~60 Frames per seconds
 
         if (!this.gameOver) { 
 
-            countSeconds();
+            this.countSeconds();
           
             this.frames += 1;
 
@@ -87,7 +77,7 @@ class Play extends Phaser.Scene {
             if (this.frames >= this.nextRockFrame) { // create next obstacle
 
                 if (this.incrementSpeed == true) {    // increase speed of everything once a new obstacle spawns
-                      speedIncrease();
+                      this.speedIncrease();
                 }
 
                 // randomize which obstacle will spawn
@@ -109,9 +99,9 @@ class Play extends Phaser.Scene {
                 
                 this.physics.add.collider(obs, this.runner, () => {
                     this.gameOver = true;
-                    this.Viking_down;
+                    this.Viking_down();
                 });
-               
+                
                 this.frames = 0; // reset frames counter.
                 this.nextRockFrame = Phaser.Math.RND.integerInRange(600/game.settings.speed, 1200/game.settings.speed); // next obs between 100 and 200 frames from prev one. NEEDS TO GET SMALLER OVER TIME.
                 //console.log(this.nextRockFrame);  
@@ -146,6 +136,20 @@ class Play extends Phaser.Scene {
         
     }
 
+    init() {
+        this.JUMP_VELOCITY = -650;
+        this.physics.world.gravity.y = 2400;
+        this.gameOver = false;
+        this.isJumping = false;
+        this.MAX_JUMPS = 1;
+        game.settings.speed = 6;
+        game.settings.obsSpeedInPPS = 360;
+        this.frames = 0;              // when to throw out a new obstacle
+        this.seconds = 0;             // when to increase speed
+        this.incrementSpeed = false;  // to synchronize the increase of speed of obstacles and ground.
+        this.nextRockFrame = 1;       // when the next rock should arrive, first is immediatly.
+    }
+
     Viking_down() {
         // starts next scene after 40 milliseconds
         setTimeout(() => {this.scene.start("GameOver")}, 40)
@@ -164,5 +168,5 @@ class Play extends Phaser.Scene {
         if (this.seconds/60 % 10 == 0) {  // set to true every 10 seconds.
             this.incrementSpeed = true; 
         }
-
+    }
 }

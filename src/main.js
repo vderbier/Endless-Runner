@@ -24,8 +24,6 @@ let config = {
 
 let game = new Phaser.Game(config);
 
-
-
 game.settings = {
     speed: 6,     // initial speed
     obsSpeedInPPS: 360  // obstacle speed is 60 * speed at all points of the game.
