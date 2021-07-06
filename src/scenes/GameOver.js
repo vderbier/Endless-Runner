@@ -7,8 +7,10 @@ class GameOver extends Phaser.Scene {
         this.load.image('gameOver', './Assets/GameOver-01.png');
       }
       
-
     create() {
+
+        this.add.image(0, 0, 'gameOver').setOrigin(0, 0);
+
         this.scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
@@ -23,8 +25,6 @@ class GameOver extends Phaser.Scene {
         }
         this.add.text(game.config.width/5*2, game.config.height/4 *3, 'Score:', this.scoreConfig).setOrigin(0.5);
         this.add.text(game.config.width/5*3, game.config.height/4 *3, Math.floor(score)*10, this.scoreConfig).setOrigin(0.5);
-        
-        this.GameOver = true;
         
         this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     }

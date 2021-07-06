@@ -9,7 +9,10 @@ Date completed: 7/6/21 (still working)
 Creative tilt justification: 
     do something technically interesting? Are you particularly proud of a programming technique 
     you implemented? Did you look beyond the class examples and learn how to do something new?
-        -
+        - The way time intervals between obstacles is implemented I think is rather interesting. What we did was count the frames
+            since the last obstacle and chose a random number between an arbitrary interval, which represents the amount of frames
+            to wait until the next obstacle is spawned. This interval got smaller as time increased so obstacles appear more often.
+            The neat part We could count the frames because the update function occurs every frame.
     
     have a great visual style? Does it use music or art that you're particularly proud of? 
     Are you trying something new or clever with the endless runner form?
