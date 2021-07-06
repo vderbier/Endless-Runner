@@ -69,7 +69,7 @@ class Play extends Phaser.Scene {
           
             this.frames += 1;
             console.log(this.frames);
-
+            
             // scrolling environment 
             this.mountains.tilePositionX += 1;
             this.groundCover.tilePositionX += game.settings.speed;
