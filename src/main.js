@@ -3,7 +3,7 @@
 const tileSize = 35;  // varible used to calculate where tiles should be set.
 const groundHeight = 60;
 const groundWidth = 600;
-const obsSpeedInPPS = 300;
+let obsSpeedInPPS = 300;
 
 let config = {
     type: Phaser.AUTO,
@@ -19,7 +19,7 @@ let config = {
             }
         }
     },
-    scene: [ Menu, Play ]
+    scene: [ Menu, Play, GameOver ]
 }
 
 let game = new Phaser.Game(config);
