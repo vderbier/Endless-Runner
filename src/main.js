@@ -57,3 +57,5 @@ game.settings = {
 }
 
 let score = 0;
+
+
