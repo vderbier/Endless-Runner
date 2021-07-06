@@ -7,7 +7,7 @@ class Play extends Phaser.Scene {
         // load images/tile sprites
         this.load.image('background', './assets/Background.png');
         this.load.image('mountains', './assets/mountains.png')
-        this.load.image('ground', './assets/ground.png');
+        this.load.image('ground', './assets/Ground.png');
         this.load.image('groundCover', './assets/GroundCover.png');
         this.load.image('rock', './assets/rock1.png');
         this.load.image('bigRock', './assets/rock2.png');
@@ -68,6 +68,7 @@ class Play extends Phaser.Scene {
             this.countSeconds();
           
             this.frames += 1;
+            console.log(this.frames);
 
             // scrolling environment 
             this.mountains.tilePositionX += 1;
