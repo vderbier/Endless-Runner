@@ -13,6 +13,7 @@ class Play extends Phaser.Scene {
         this.load.image('bigRock', './assets/rock2.png');
         this.load.image('tree', './assets/tree.png');
         this.load.image('runner', './assets/Runner.png');
+        this.load.audio('jump', 'assets/jump1.ogg');
 
         this.load.spritesheet('running', './assets/AnimatedRunner8Frames-01.png', 
             {frameWidth: 80, frameHeight: 127, startFrame: 0, endFrame: 7});
@@ -20,7 +21,7 @@ class Play extends Phaser.Scene {
     
     create() {
 
-        this.init();
+        this.init(); // set variables used in this scene.
 
         // Add tile Sprites
         this.mountains = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'mountains').setOrigin(0, 0);
@@ -68,7 +69,6 @@ class Play extends Phaser.Scene {
             this.countSeconds();
           
             this.frames += 1;
-            console.log(this.frames);
 
             // scrolling environment 
             this.mountains.tilePositionX += 1;
@@ -122,9 +122,14 @@ class Play extends Phaser.Scene {
 
             // jump when up key is down.
             if (this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(this.upKey, 170)) {
+
+                if (Phaser.Input.Keyboard.JustDown(this.upKey)) {   // jumping sound should only play once.
+                    this.sound.play('jump'); 
+                }
                 this.runner.body.velocity.y = this.JUMP_VELOCITY;
                 this.isJummping = true;
             }
+
 
             // upon release of up key, start falling back down.
             if(this.isJummping && Phaser.Input.Keyboard.UpDuration(this.upKey)) {
@@ -148,7 +153,7 @@ class Play extends Phaser.Scene {
         this.frames = 0;              // when to throw out a new obstacle
         this.seconds = 0;             // when to increase speed
         this.incrementSpeed = false;  // to synchronize the increase of speed of obstacles and ground.
-        this.nextRockFrame = 1;       // when the next rock should arrive, first is immediatly.
+        this.nextRockFrame = 1;       // when the next rock should arrive, first is immediatly. 
     }
 
     Viking_down() {
