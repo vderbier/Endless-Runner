@@ -6,7 +6,7 @@ class Play extends Phaser.Scene {
     preload() {
         // load images/tile sprites
         this.load.image('background', './assets/Background.png');
-        this.load.image('mountains', './assets/mountains.png')
+        this.load.image('mountains', './assets/mountains.png');
         this.load.image('ground', './assets/Ground.png');
         this.load.image('groundCover', './assets/GroundCover.png');
         this.load.image('rock', './assets/rock1.png');
