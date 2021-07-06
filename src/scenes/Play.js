@@ -74,7 +74,7 @@ class Play extends Phaser.Scene {
 
             // scrolling environment 
             this.mountains.tilePositionX += 1;
-            this.groundCover.tilePositionX += game.settings.speed;
+            this.groundCover.tilePositionX = game.settings.speed;
 
             // Use frame rate to callculate when next obs should appear. 
             if (this.frames >= this.nextRockFrame) { // create next obstacle
@@ -127,13 +127,14 @@ class Play extends Phaser.Scene {
         }
         
     }
+
     Viking_down() {
-            this.scene.start("GameOver");
-            clearInterval(this.inc);
-        }
+        setTimeout(() => {this.scene.start("GameOver")}, 40)
+        clearInterval(this.inc);
+    }
     speedIncrease() {
         console.log("speed+");
         game.settings.speed = game.settings.speed*(1.2);
-        game.settings.obsSpeedInPPS += 60;
+        obsSpeedInPPS += 10;
     }
 }
