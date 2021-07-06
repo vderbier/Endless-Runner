@@ -13,7 +13,7 @@ let config = {
     physics: {     // physics settings from Nathan Altice's MovementStudies example.
         default: 'arcade',
         arcade: {
-            debug: true,
+            debug: false,
             gravity: {
                 x: 0,
                 y: 0
@@ -29,3 +29,5 @@ game.settings = {
     speed: 6,     // initial speed
     obsSpeedInPPS: 360  // obstacle speed is 60 * speed at all points of the game.
 }
+
+let score = 0;

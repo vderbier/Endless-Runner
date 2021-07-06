@@ -46,7 +46,7 @@ class Play extends Phaser.Scene {
         this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
 
         // set up runner
-        this.runner = this.physics.add.sprite(120, game.config.height/2-tileSize, 'runner'); // 0.8 is the scale
+        this.runner = this.physics.add.sprite(120, game.config.height - groundHeight*2, 'runner'); // 0.8 is the scale
         // running animation config
         this.animFramesConfig = {
             key: 'running',
@@ -68,7 +68,6 @@ class Play extends Phaser.Scene {
             this.countSeconds();
           
             this.frames += 1;
-            console.log(this.frames);
 
             // scrolling environment 
             this.mountains.tilePositionX += 1;
@@ -99,8 +98,8 @@ class Play extends Phaser.Scene {
                 this.physics.add.collider(obs, this.ground);
                 
                 this.physics.add.collider(obs, this.runner, () => {
-                    this.gameOver = true;
-                    this.Viking_down();
+                    this.gameOver = true; 
+                    this.Viking_down();   // launch game Over scene.
                 });
                 
                 this.frames = 0; // reset frames counter.
@@ -165,7 +164,8 @@ class Play extends Phaser.Scene {
   
     countSeconds() {
         // equals true every 10 seconds. To sync ground and obstacle speed.
-        this.seconds += 1;             
+        this.seconds += 1;          
+        score = this.seconds/60;   
         if (this.seconds/60 % 10 == 0) {  // set to true every 10 seconds.
             this.incrementSpeed = true; 
         }
