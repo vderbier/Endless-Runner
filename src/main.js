@@ -4,6 +4,7 @@ const tileSize = 35;  // varible used to calculate where tiles should be set.
 const groundHeight = 60;
 const groundWidth = 600;
 
+
 let config = {
     type: Phaser.AUTO,
     width: 888,  // size of game, we can modify this if we want. I think maybe a bit wider could be good
@@ -18,7 +19,7 @@ let config = {
             }
         }
     },
-    scene: [ Menu, Play ]
+    scene: [ Menu, Play, GameOver ]
 }
 
 let game = new Phaser.Game(config);

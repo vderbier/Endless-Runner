@@ -63,11 +63,11 @@ class Play extends Phaser.Scene {
 
         this.physics.add.collider(this.runner, this.ground);
 
+
         this.frames = 0;              // when to throw out a new obstacle
         this.seconds = 0;             // when to increase speed
         this.incrementSpeed = false;  // to synchronize the increase of speed of obstacles and ground.
         this.nextRockFrame = 1;       // when the next rock should arrive, first is immediatly.
-
 
     }
 
@@ -75,11 +75,8 @@ class Play extends Phaser.Scene {
 
         if (!this.gameOver) { 
 
-            this.seconds += 1;             
-            if (this.seconds/60 % 10 == 0) {  // set to true every 10 seconds.
-                this.incrementSpeed = true; 
-            }
-
+            countSeconds();
+          
             this.frames += 1;
 
             // scrolling environment 
@@ -90,10 +87,7 @@ class Play extends Phaser.Scene {
             if (this.frames >= this.nextRockFrame) { // create next obstacle
 
                 if (this.incrementSpeed == true) {    // increase speed of everything once a new obstacle spawns
-                    game.settings.speed += 1;         // so it looks in sync.
-                    game.settings.obsSpeedInPPS += 60;
-                    console.log(game.settings.speed);
-                    this.incrementSpeed = false;
+                      speedIncrease();
                 }
 
                 // randomize which obstacle will spawn
@@ -110,17 +104,14 @@ class Play extends Phaser.Scene {
                 let obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - tileSize*4, obsType);
 
                 obs.body.setVelocityX(-game.settings.obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME.
-                //obs.body.setCircle(36);
-                //obs.body.bounce.set(1);
+
                 this.physics.add.collider(obs, this.ground);
                 
                 this.physics.add.collider(obs, this.runner, () => {
                     this.gameOver = true;
-                    obs.body.enable = false;
-                    this.runner.body.enable = false;
+                    this.Viking_down;
                 });
-                //console.log(this.physics.add.collider(obs, this.runner));
-            
+               
                 this.frames = 0; // reset frames counter.
                 this.nextRockFrame = Phaser.Math.RND.integerInRange(600/game.settings.speed, 1200/game.settings.speed); // next obs between 100 and 200 frames from prev one. NEEDS TO GET SMALLER OVER TIME.
                 //console.log(this.nextRockFrame);  
@@ -152,5 +143,26 @@ class Play extends Phaser.Scene {
             }
             /***********************************************************************************/
         }
+        
     }
+
+    Viking_down() {
+        // starts next scene after 40 milliseconds
+        setTimeout(() => {this.scene.start("GameOver")}, 40)
+    }
+  
+    speedIncrease() {
+        game.settings.speed += 1;         // so it looks in sync.
+        game.settings.obsSpeedInPPS += 60;
+        console.log(game.settings.speed);
+        this.incrementSpeed = false;
+    }
+  
+    countSeconds() {
+        // equals true every 10 seconds. To sync ground and obstacle speed.
+        this.seconds += 1;             
+        if (this.seconds/60 % 10 == 0) {  // set to true every 10 seconds.
+            this.incrementSpeed = true; 
+        }
+
 }
