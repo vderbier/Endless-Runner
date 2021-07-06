@@ -4,6 +4,7 @@ const tileSize = 35;  // varible used to calculate where tiles should be set.
 const groundHeight = 60;
 const groundWidth = 600;
 
+// hahaha
 
 let config = {
     type: Phaser.AUTO,
