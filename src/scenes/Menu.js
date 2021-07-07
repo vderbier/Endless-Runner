@@ -10,10 +10,8 @@ class Menu extends Phaser.Scene {
   }
   
   create() {
-    this.music =  this.sound.add('music', {
-      loop: true
-    });
-    this.music.play();
+
+    this.sound.play('music');
 
     this.add.image(0, 0, 'title').setOrigin(0, 0);
       
