@@ -39,7 +39,7 @@ let config = {
     physics: {     // physics settings from Nathan Altice's MovementStudies example.
         default: 'arcade',
         arcade: {
-            debug: false,
+            debug: true,
             gravity: {
                 x: 0,
                 y: 0
