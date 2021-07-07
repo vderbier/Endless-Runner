@@ -11,7 +11,10 @@ class Menu extends Phaser.Scene {
   
   create() {
 
-    this.sound.play('music');
+
+    this.sound.play('music', {volume: 0.5, loop: true});  // adjusted volume.
+
+
 
     this.add.image(0, 0, 'title').setOrigin(0, 0);
       
