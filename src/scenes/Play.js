@@ -92,10 +92,11 @@ class Play extends Phaser.Scene {
                     var obsType = 'tree';
                 }
                 
-                let obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - tileSize*4, obsType);
+                let obs = this.physics.add.sprite(game.config.width + tileSize*2, game.config.height - groundHeight, obsType);
 
                 obs.body.setVelocityX(-game.settings.obsSpeedInPPS); // pixels per second. NEED TO INCREMENT OVER TIME.
-
+                obs.setOrigin(0.5, 1.0);
+                obs.setSize(obs.width/2, obs.height/1.2);
                 this.physics.add.collider(obs, this.ground);
                 
                 this.physics.add.collider(obs, this.runner, () => {
